@@ -163,20 +163,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const sellType = document.getElementById('sellType').value;
     const newPriceValue = newPrice.value !== '' ? parseFloat(newPrice.value) : selectedProduct.price;
     const totalSellPrice = quantityToSell * newPriceValue;
-
+  
     // Crear el contenido del ticket
     const ticketContent = `
-      <h2>Ticket de Venta</h2>
-      <p><strong>Producto:</strong> ${selectedProductName}</p>
-      <p><strong>Cantidad:</strong> ${quantityToSell}</p>
-      <p><strong>Tipo de venta:</strong> ${sellType}</p>
-      <p><strong>Precio unitario:</strong> ${newPriceValue}</p>
-      <p><strong>Precio total:</strong> ${totalSellPrice}</p>
+      <div class="ticket">
+        <h2 class="ticket-title">Ticket de Venta</h2>
+        <div class="ticket-details">
+          <p><strong>Producto:</strong> ${selectedProductName}</p>
+          <p><strong>Cantidad:</strong> ${quantityToSell}</p>
+          <p><strong>Tipo de venta:</strong> ${sellType}</p>
+          <p><strong>Precio total:</strong> ${totalSellPrice}</p>
+        </div>
+      </div>
     `;
-
+  
     // Abrir una nueva ventana con el contenido del ticket
     const ticketWindow = window.open('', '_blank');
     ticketWindow.document.body.innerHTML = ticketContent;
+
+    // Crear el contenido del ticket
+  
+  
+    // Crear un nuevo documento PDF
+    const doc = new jsPDF();
+    
+    // Agregar el contenido del ticket al PDF
+    doc.text(ticketContent, 10, 10);
+    
+    // Descargar el PDF automáticamente
+    doc.save('ticket.pdf');
   }
 
   function updateProductTable() {
