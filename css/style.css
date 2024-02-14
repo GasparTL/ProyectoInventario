@@ -92,6 +92,11 @@ button#exportToExcelButton {
   color: #fff;
 }
 
+button#saveLocallyButton {
+  background-color: #303509;
+  color: #fff;
+}
+
 button#clearDataButton {
   background-color: #dc3545;
   color: #fff;
