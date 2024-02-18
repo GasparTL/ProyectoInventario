@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realizar Venta</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    input[type="text"], input[type="number"], select {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+    input[type="submit"], button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+    <h1>Realizar Venta</h1>
+    <form id="ventaForm">
+        <label for="producto">Producto:</label>
+        <select id="producto" name="producto" required>
+            <option value="" selected disabled>Selecciona un producto</option>
+        </select><br>
+        <label for="tipoVenta">Tipo de Venta:</label>
+        <select id="tipoVenta" name="tipoVenta" required>
+            <option value="pieza">Por pieza</option>
+            <option value="paquete">Por paquete</option>
+        </select><br>
+        <label for="precioVenta">Precio de Venta:</label>
+        <input type="number" id="precioVenta" name="precioVenta" step="0.01" required><br>
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required><br>
+        <input type="submit" value="Realizar Venta">
+    </form>
+    <table id="tablaVentas">
+        <tr>
+            <th>Producto</th>
+            <th>Tipo de Venta</th>
+            <th>Precio de Venta</th>
+            <th>Cantidad</th>
+            <th>Fecha y Hora</th>
+        </tr>
+    </table>
+
+    <button onclick="borrarVentas()" class="btn">Borrar Ventas</button>
+
+    <script>
+        const ventaForm = document.getElementById('ventaForm');
+        const tablaVentas = document.getElementById('tablaVentas');
+
+        // Cargar productos del localStorage al cargar la página
+        window.onload = function() {
+            const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+            const productoDropdown = document.getElementById('producto');
+
+            inventario.forEach(item => {
+                const option = document.createElement('option');
+                option.text = item.producto;
+                productoDropdown.add(option);
+            });
+        };
+
+        ventaForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const producto = document.getElementById('producto').value;
+            const tipoVenta = document.getElementById('tipoVenta').value;
+            const precioVenta = parseFloat(document.getElementById('precioVenta').value);
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const fechaHora = obtenerFechaHoraActual();
+
+            const fila = `<tr>
+                            <td>${producto}</td>
+                            <td>${tipoVenta}</td>
+                            <td>${precioVenta.toFixed(2)}</td>
+                            <td>${cantidad}</td>
+                            <td>${fechaHora}</td>
+                         </tr>`;
+
+            tablaVentas.innerHTML += fila;
+
+            // Guardar en localStorage
+            const ventas = JSON.parse(localStorage.getItem('ventas')) || [];
+            ventas.push({ producto, tipoVenta, precioVenta, cantidad, fechaHora });
+            localStorage.setItem('ventas', JSON.stringify(ventas));
+
+            // Limpiar formulario
+            ventaForm.reset();
+        });
+
+        function obtenerFechaHoraActual() {
+            const now = new Date();
+            const fecha = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}`;
+            const hora = `${('0' + now.getHours()).slice(-2)}:${('0' + now.getMinutes()).slice(-2)}:${('0' + now.getSeconds()).slice(-2)}`;
+            return `${fecha} ${hora}`;
+        }
+
+        function borrarVentas() {
+            localStorage.removeItem('ventas');
+            tablaVentas.innerHTML = '<tr><th>Producto</th><th>Tipo de Venta</th><th>Precio de Venta</th><th>Cantidad</th><th>Fecha y Hora</th></tr>';
+        }
+    </script>
+</body>
+</html>

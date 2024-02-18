@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen de Inventario y Ventas</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .rojo {
+        background-color: #FFC0CB;
+    }
+    .amarillo {
+        background-color: #FFFF00;
+    }
+    .verde {
+        background-color: #90EE90;
+    }
+</style>
+</head>
+<body>
+    <h1>Resumen de Inventario y Ventas</h1>
+
+    <h2>Inventario</h2>
+    <table id="tablaInventario">
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Original</th>
+            <th>Precio Venta</th>
+        </tr>
+    </table>
+
+    <h2>Ventas</h2>
+    <table id="tablaVentas">
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad Vendida</th>
+            <th>Precio de Venta</th>
+        </tr>
+    </table>
+
+    <h2>Ganancias Totales</h2>
+    <p id="gananciasTotales"></p>
+
+    <script>
+        // Obtener datos de inventario
+        const inventarioData = JSON.parse(localStorage.getItem('inventario')) || [];
+
+        // Mostrar datos de inventario
+        const tablaInventario = document.getElementById('tablaInventario');
+        let inversionTotal = 0;
+
+        inventarioData.forEach(producto => {
+            const { nombre, cantidad, precioOriginal, precioVenta } = producto;
+            const fila = `<tr class="${getClassByCantidad(cantidad)}">
+                            <td>${nombre}</td>
+                            <td>${cantidad}</td>
+                            <td>${precioOriginal}</td>
+                            <td>${precioVenta}</td>
+                         </tr>`;
+            tablaInventario.innerHTML += fila;
+
+            // Calcular inversión total
+            inversionTotal += cantidad * precioOriginal;
+        });
+
+        // Mostrar inversión total
+        const gananciasTotales = document.getElementById('gananciasTotales');
+        gananciasTotales.innerText = `Inversión Total: ${inversionTotal.toFixed(2)}`;
+
+        // Obtener datos de ventas
+        const ventasData = JSON.parse(localStorage.getItem('ventas')) || [];
+
+        // Mostrar datos de ventas
+        const tablaVentas = document.getElementById('tablaVentas');
+        let ganancias = 0;
+
+        ventasData.forEach(venta => {
+            const { producto, cantidad, precioVenta } = venta;
+            const fila = `<tr>
+                            <td>${producto}</td>
+                            <td>${cantidad}</td>
+                            <td>${precioVenta}</td>
+                         </tr>`;
+            tablaVentas.innerHTML += fila;
+
+            // Calcular ganancias
+            ganancias += cantidad * precioVenta;
+        });
+
+        // Calcular ganancias totales respecto a la inversión total
+        gananciasTotales.innerText += ` | Ganancias Totales: ${(ganancias - inversionTotal).toFixed(2)}`;
+
+        function getClassByCantidad(cantidad) {
+            if (cantidad < 10) {
+                return 'rojo';
+            } else if (cantidad < 30) {
+                return 'amarillo';
+            } else {
+                return 'verde';
+            }
+        }
+    </script>
+</body>
+</html>
