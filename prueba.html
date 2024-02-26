@@ -25,19 +25,21 @@
   </form>
 
   <h2>Productos</h2>
-  <table id="productTable">
-    <thead>
-      <tr>
-        <th>Nombre Producto</th>
-        <th>Cantidad por pieza</th>
-        <th>Precio por pieza</th>
-        <th>Total Inversión</th>
-      </tr>
-    </thead>
-    <tbody id="productTableBody">
-      <!-- Aquí se insertarán las filas de productos -->
-    </tbody>
-  </table>
+  <div id="productTableContainer">
+    <table id="productTable">
+      <thead>
+        <tr>
+          <th>Nombre Producto</th>
+          <th>Cantidad por pieza</th>
+          <th>Precio por pieza</th>
+          <th>Total Inversión</th>
+        </tr>
+      </thead>
+      <tbody id="productTableBody">
+        <!-- Aquí se insertarán las filas de productos -->
+      </tbody>
+    </table>
+  </div>
   
   <h2>Administrar Stock</h2>
   <form id="stockForm">
@@ -71,40 +73,38 @@
     <label for="newPrice">Precio Venta (Por pieza):</label>
     <input type="number" id="newPrice" min="0.01" step="0.01">
     <button id="sellButton">Vender</button>
+    <button id="generateTicketButton">Generar Ticket de Venta</button>
   </div>
   
-  <button id="generateTicketButton">Generar Ticket de Venta</button>
+  
 
   <h2>Inventario</h2>
-  <table id="inventoryTable">
-    <!-- Aquí se insertará la tabla de inventario -->
-  </table>
+  <div id="inventoryTableContainer">
+    <table id="inventoryTable">
+      <!-- Aquí se insertará la tabla de inventario -->
+    </table>
+  </div>
 
   <h2>Inversión y Ganancias</h2>
-  <table id="investmentTable">
-    <!-- Aquí se insertará la tabla de inversión y ganancias -->
-    <tbody>
-  <tr>
-    <td>${totalInvestment}</td>
-    <td><span id="totalEarnings">${totalEarnings}</span></td>
-  </tr>
-</tbody>
+  <div id="investmentTableContainer">
+    <table id="investmentTable">
+      <!-- Aquí se insertará la tabla de inversión y ganancias -->
+    </table>
+  </div>
 
-  </table>
-
-  <button id="exportToExcelButton">Exportar a Excel</button>
-
-  <button id="saveLocallyButton">Guardar Datos Localmente</button>
-  
-  <button id="clearDataButton">Eliminar todos los datos de las tablas</button>
+  <!-- Botones en un nuevo contenedor div -->
+  <div id="buttonContainer">
+    <button id="exportToExcelButton">Exportar a Excel</button>
+    <button id="saveLocallyButton">Guardar Datos Localmente</button>
+    <button id="clearDataButton">Eliminar todos los datos de las tablas</button>
+  </div>
 
   <script>
-
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
   const productForm = document.getElementById('productForm');
   const productTableBody = document.getElementById('productTableBody');
-  const inventoryTable = document.getElementById('inventoryTable');
-  const investmentTable = document.getElementById('investmentTable');
+  const inventoryTableContainer = document.getElementById('inventoryTableContainer');
+  const investmentTableContainer = document.getElementById('investmentTableContainer');
   const sellProductForm = document.getElementById('sellProductForm');
   const selectProduct = document.getElementById('selectProduct');
   const sellQuantity = document.getElementById('sellQuantity');
@@ -329,6 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
+    const inventoryTableBody = document.createElement('tbody'); // Crear un nuevo cuerpo de tabla para evitar problemas de repetición de contenido
     // Nueva tabla para mostrar cantidad por pieza y por paquete vendida
     const inventoryTableHTML = `
       <thead>
@@ -340,37 +341,38 @@ document.addEventListener('DOMContentLoaded', function() {
           <th>Vendido por Paquetes</th>
         </tr>
       </thead>
-      <tbody>
-        ${Object.keys(inventoryData).map(name => `
-          <tr>
-            <td>${name}</td>
-            <td>${inventoryData[name].totalQuantity}</td>
-            <td>${inventoryData[name].remainingQuantity}</td>
-            <td>${inventoryData[name].soldByPiece}</td>
-            <td>${inventoryData[name].soldByPackage}</td>
-          </tr>
-        `).join('')}
-      </tbody>
+      ${Object.keys(inventoryData).map(name => `
+        <tr>
+          <td>${name}</td>
+          <td>${inventoryData[name].totalQuantity}</td>
+          <td>${inventoryData[name].remainingQuantity}</td>
+          <td>${inventoryData[name].soldByPiece}</td>
+          <td>${inventoryData[name].soldByPackage}</td>
+        </tr>
+      `).join('')}
     `;
-
-    inventoryTable.innerHTML = inventoryTableHTML;
+    inventoryTableBody.innerHTML = inventoryTableHTML;
+    inventoryTableContainer.innerHTML = ''; // Limpiar la tabla antes de agregar el nuevo cuerpo
+    inventoryTableContainer.appendChild(inventoryTableBody); // Agregar el nuevo cuerpo de la tabla
   }
 
   function updateInvestmentTable() {
     const totalInvestment = products.reduce((acc, curr) => acc + curr.totalInvestment, 0);
-    investmentTable.innerHTML = `
-      <thead>
-        <tr>
-          <th>Inversión Total</th>
-          <th>Ganancias Totales</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>${totalInvestment}</td>
-          <td>${totalEarnings}</td>
-        </tr>
-      </tbody>
+    investmentTableContainer.innerHTML = `
+      <table id="investmentTable">
+        <thead>
+          <tr>
+            <th>Inversión Total</th>
+            <th>Ganancias Totales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${totalInvestment}</td>
+            <td>${totalEarnings}</td>
+          </tr>
+        </tbody>
+      </table>
     `;
   }
 
@@ -405,8 +407,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const investmentWorksheet = workbook.addWorksheet('Inversión y Ganancias');
 
     exportTableToExcel(productTable, productWorksheet);
-    exportTableToExcel(inventoryTable, inventoryWorksheet);
-    exportTableToExcel(investmentTable, investmentWorksheet);
+    exportTableToExcel(inventoryTableContainer.firstChild, inventoryWorksheet); // Use el primer hijo del contenedor, que es la tabla
+    exportTableToExcel(investmentTableContainer.firstChild, investmentWorksheet); // Use el primer hijo del contenedor, que es la tabla
 
     workbook.xlsx.writeBuffer().then(function(buffer) {
       saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'gestion_productos.xlsx');
@@ -449,14 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStockOptions();
   }
 
-  // Calcular ganancias de esta venta
-const earningsFromSale = totalSellPrice - (selectedProduct.totalInvestment / selectedProduct.quantity) * quantityToSellAdjusted;
-totalEarnings += earningsFromSale; // Sumar ganancias al total
-document.getElementById('totalEarnings').textContent = totalEarnings; // Actualizar el contenido del span
-
-
 });
-
   </script>
 </body>
 </html>
