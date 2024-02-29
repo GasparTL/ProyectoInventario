@@ -75,11 +75,11 @@ a {
   text-decoration: none;
 }
 
-img {
+/*img {
   display: block;
-  max-width: 100%;
+  max-width: 45%;
   height: auto;
-}
+}*/
 
 /*=============== REUSABLE CSS CLASSES ===============*/
 .container {
