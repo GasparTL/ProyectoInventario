@@ -8,9 +8,12 @@
 
       <!--=============== REMIXICONS ===============-->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
       <!--=============== CSS ===============-->
       <link rel="stylesheet" href="assets/css/styles.css">
+
+      <link rel="stylesheet" href="estilo10.css">
 
       <title>Dieho Calcetines</title>
    </head>
@@ -58,35 +61,88 @@
 
       <!--==================== PRODUCTS ====================-->
 
-      <section id="productos">
-         <h2>Productos</h2>
-         <div class="swiper mySwiper">
-            <div class="swiper-wrapper">
-               <div class="swiper-slide">
-                   <div class="icons">
-                     <i class="fa-solid fa-circle-arrow-left"></i>
-                  <img src="assets/img/calcetines-nike" alt="">
-                   <i class="fa-regular fa-heart"></i>
+      
          
-               </div>
-               <div class="product-content">
-                  <div class="product-txt">
-         
-                     <span>$65</span>
-                     <h3>Calcetines ADIDAS</h3>
-                     <p> aqui va la descripcion</p>
+      <section class="contenido">
+         <div class="mostrador" id="mostrador">
+             <div class="fila">
+                 <div class="item" onclick="cargar(this)">
+                     <div class="contenedor-foto">
+                         <img src="assets/img/calcetin-jordan-3color-bwp-pack-3.jpg" alt="">
+                     </div>
+                     <p class="descripcion">Calcetines Deportivos Jordan</p>
+                     <span class="precio">$ 60</span>
+                 </div>
+
+                 <div class="item" onclick="cargar(this)">
+                  <div class="contenedor-foto">
+                      <img src="assets/img/calcetin-jordan-3color-bwp-pack-3.jpg" alt="">
                   </div>
-                  <div class="product-img">
-                     <img src="assets/img/calcetines-nike" alt="Producto1">
-                  </div>
+                  <p class="descripcion">Calcetines Deportivos Jordan</p>
+                  <span class="precio">$ 60</span>
+              </div>
+
+
+              <div class="item" onclick="cargar(this)">
+               <div class="contenedor-foto">
+                   <img src="assets/img/calcetin-jordan-3color-bwp-pack-3.jpg" alt="">
                </div>
-               <button onclick="contactarVendedor('+1234567890', 'Producto1')">Contactar al vendedor</button>
+               <p class="descripcion">Calcetines Deportivos Jordan</p>
+               <span class="precio">$ 60</span>
+           </div>
+
+
+
+                 
+             </div>
+             <div class="fila">
+
+               <div class="item" onclick="cargar(this)">
+                  <div class="contenedor-foto">
+                      <img src="assets/img/calcetin-jordan-3color-bwp-pack-3.jpg" alt="">
+                  </div>
+                  <p class="descripcion">Calcetines Deportivos Jordan</p>
+                  <span class="precio">$ 60</span>
+              </div>
+
+              <div class="item" onclick="cargar(this)">
+               <div class="contenedor-foto">
+                   <img src="assets/img/calcetin-jordan-3color-bwp-pack-3.jpg" alt="">
+               </div>
+               <p class="descripcion">Calcetines Deportivos Jordan</p>
+               <span class="precio">$ 60</span>
+           </div>
+
+           <div class="item" onclick="cargar(this)">
+            <div class="contenedor-foto">
+                <img src="assets/img/calcetin-jordan-3color-bwp-pack-3.jpg" alt="">
             </div>
-         
-            </div>
+            <p class="descripcion">Calcetines Deportivos Jordan</p>
+            <span class="precio">$ 60</span>
+        </div>
+                 
+             </div> 
          </div>
-        
-       </section>
+         <!-- CONTENEDOR DEL ITEM SELECCIONADO -->
+         <div class="seleccion" id="seleccion">
+             <div class="cerrar" onclick="cerrar()">
+                 &#x2715
+             </div>
+             <div class="info">
+                 <img src="img/1.png" alt="" id="img">
+                 <h2 id="modelo">NIKE MODEL 1</h2>
+                 <p id="descripcion">Descripción Modelo 1</p>
+ 
+                 <span class="precio" id="precio">$ 130</span>
+ 
+                 <div class="fila">
+                     <a href="https://wa.me/5572480664?text=Hola,%20estoy%20interesado%20en%20tu%20producto." target="_blank"> Contaca Al vendedor
+                        <img class="WhatsApp"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png" alt="WhatsApp Logo" style="width: 100px; height: 100px;">
+                      </a>
+                 </div>
+             </div>
+         </div>
+     </section>
 
 
       <!--==================== SEARCH ====================-->
@@ -124,5 +180,10 @@
       
       <!--=============== MAIN JS ===============-->
       <script src="assets/js/main.js"></script>
+
+      <script src="script.js"></script>
+    
+
+
    </body>
 </html>
