@@ -34,3 +34,20 @@ function quitarBordes(){
         items[i].style.border = "none";
     }
 }
+// Obtener referencia al botón
+const contactSellerBtn = document.getElementById('contactSellerBtn');
+
+// Agregar evento de clic al botón
+contactSellerBtn.addEventListener('click', function() {
+  // Obtener la ruta de la imagen seleccionada
+  const imgSrc = document.getElementById('img').getAttribute('data-img-src');
+  
+  // Mensaje predeterminado que incluye la imagen
+  const message = `Hola Diego DM, estoy interesado en comprar un producto `;
+  
+  // Crear el enlace para abrir WhatsApp con el mensaje predeterminado
+  const whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+  
+  // Abrir WhatsApp en una nueva ventana
+  window.open(whatsappLink);
+});
