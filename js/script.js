@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
   const productForm = document.getElementById('productForm');
   const productTableBody = document.getElementById('productTableBody');
-  const inventoryTable = document.getElementById('inventoryTable');
-  const investmentTable = document.getElementById('investmentTable');
+  const inventoryTableContainer = document.getElementById('inventoryTableContainer');
+  const investmentTableContainer = document.getElementById('investmentTableContainer');
   const sellProductForm = document.getElementById('sellProductForm');
   const selectProduct = document.getElementById('selectProduct');
   const sellQuantity = document.getElementById('sellQuantity');
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const generateTicketButton = document.getElementById('generateTicketButton');
   const exportToExcelButton = document.getElementById('exportToExcelButton');
   const clearDataButton = document.getElementById('clearDataButton');
+  const sellTable = document.getElementById('sellTable'); // Agregado: referencia a la tabla de ventas
   let products = [];
   let totalEarnings = 0; // Variable para almacenar las ganancias totales
 
@@ -227,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
+    const inventoryTableBody = document.createElement('tbody'); // Crear un nuevo cuerpo de tabla para evitar problemas de repetición de contenido
     // Nueva tabla para mostrar cantidad por pieza y por paquete vendida
     const inventoryTableHTML = `
       <thead>
@@ -238,37 +240,50 @@ document.addEventListener('DOMContentLoaded', function() {
           <th>Vendido por Paquetes</th>
         </tr>
       </thead>
-      <tbody>
-        ${Object.keys(inventoryData).map(name => `
-          <tr>
+      ${Object.keys(inventoryData).map(name => {
+        // Calcula la clase CSS dependiendo de la cantidad
+        let rowClass = '';
+        if (inventoryData[name].remainingQuantity < 25) {
+          rowClass = 'low-stock-red';
+        } else if (inventoryData[name].remainingQuantity < 50) {
+          rowClass = 'medium-stock-orange';
+        } else {
+          rowClass = 'high-stock-green';
+        }
+        // Retorna la fila con la clase CSS
+        return `
+          <tr class="${rowClass}">
             <td>${name}</td>
             <td>${inventoryData[name].totalQuantity}</td>
             <td>${inventoryData[name].remainingQuantity}</td>
             <td>${inventoryData[name].soldByPiece}</td>
             <td>${inventoryData[name].soldByPackage}</td>
           </tr>
-        `).join('')}
-      </tbody>
+        `;
+      }).join('')}
     `;
-
-    inventoryTable.innerHTML = inventoryTableHTML;
+    inventoryTableBody.innerHTML = inventoryTableHTML;
+    inventoryTableContainer.innerHTML = ''; // Limpiar la tabla antes de agregar el nuevo cuerpo
+    inventoryTableContainer.appendChild(inventoryTableBody); // Agregar el nuevo cuerpo de la tabla
   }
 
   function updateInvestmentTable() {
     const totalInvestment = products.reduce((acc, curr) => acc + curr.totalInvestment, 0);
-    investmentTable.innerHTML = `
-      <thead>
-        <tr>
-          <th>Inversión Total</th>
-          <th>Ganancias Totales</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>${totalInvestment}</td>
-          <td>${totalEarnings}</td>
-        </tr>
-      </tbody>
+    investmentTableContainer.innerHTML = `
+      <table id="investmentTable">
+        <thead>
+          <tr>
+            <th>Inversión Total</th>
+            <th>Ganancias Totales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${totalInvestment}</td>
+            <td>${totalEarnings}</td>
+          </tr>
+        </tbody>
+      </table>
     `;
   }
 
@@ -303,8 +318,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const investmentWorksheet = workbook.addWorksheet('Inversión y Ganancias');
 
     exportTableToExcel(productTable, productWorksheet);
-    exportTableToExcel(inventoryTable, inventoryWorksheet);
-    exportTableToExcel(investmentTable, investmentWorksheet);
+    exportTableToExcel(inventoryTableContainer.firstChild, inventoryWorksheet); // Use el primer hijo del contenedor, que es la tabla
+    exportTableToExcel(investmentTableContainer.firstChild, investmentWorksheet); // Use el primer hijo del contenedor, que es la tabla
 
     workbook.xlsx.writeBuffer().then(function(buffer) {
       saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'gestion_productos.xlsx');
@@ -348,3 +363,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 });
+// Agregar un evento al botón de cerrar sesión
+document.getElementById('logoutButton').addEventListener('click', function() {
+      // Redirigir al usuario a index.html
+      window.location.href = 'index.html';
+    });
