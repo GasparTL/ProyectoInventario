@@ -65,23 +65,17 @@
     <!-- Site wrapper -->
     <div class="wrapper">
 
-       
+     <?php
+        include "modulos/cabezote.php";
 
-        <!-- =============================================== -->
+     ?>
 
-        <!-- Left side column. contains the sidebar -->
-        
-        <!-- =============================================== -->
-
-        <!-- Content Wrapper. Contains page content -->
-       
-
-        <!-- Control Sidebar -->
+      
         
     </div>
     <!-- ./wrapper -->
 
-    <script src="js/plantilla.js"></script>
+    <script src="vistas/js/plantilla.js"></script>
 
    
 </body>
